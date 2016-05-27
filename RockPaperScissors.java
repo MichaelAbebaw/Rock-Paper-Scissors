@@ -13,17 +13,13 @@ public class RockPaperScissors {
 			// variables
 			int playerScore = 0;
 			int pcScore = 0;
-			String playerItem;
-			String randItem;
-			//
-						
+			String result = null;
+			String playerItem;			
+			
 			System.out.println("How many rounds?");
 			Scanner input = new Scanner(System.in);
 			int rounds = input.nextInt();
 			int counter = rounds;
-			
-			// dynamic method dispatch
-			ItemOperation operation = null;
 			
 			while(rounds > 0){
 				
@@ -33,22 +29,18 @@ public class RockPaperScissors {
 				playerItem = input.next(); // read user input
 				
 				//generate random item
-				randItem = getRandomItem(); 
+				Items randItem = getRandomItem(); 
 					
-				// polymorphical call
-				switch(playerItem)
-				{
+				// call
+				switch(playerItem){
 				case "rock":
-					operation = new Rock(randItem);
-					operation.attack();
+					result = randItem.attack(new Rock("Rock"));
 					break;
 				case "paper":
-					operation = new Paper(randItem);
-					operation.attack();
+					result = randItem.attack(new Paper("Paper"));
 					break;
 				case "scissor":
-					operation = new Scissor(randItem);
-					operation.attack();
+					result = randItem.attack(new Scissor("Scissor"));
 					break;
 				default:
 					System.out.println("This round will not count! Pick either rock, paper or scissor.");
@@ -57,22 +49,22 @@ public class RockPaperScissors {
 				}
 				
 				// check for the results and increment
-				if (operation == null){
+				if (result == ""){
 					continue;
 				}
-				else if (operation.attack() == "You win!"){
+				else if (result == "You win!"){
 					playerScore ++;
 				}
-				else if (operation.attack() == "Your opponent wins!"){
+				else if (result == "Your opponent wins!"){
 					pcScore ++;
 				}
 								
 				// print round score
 				System.out.println("You chose " + playerItem 
-									+ ", your opponent chose " + randItem
-									+ ". " + operation.attack());
-				// set object to null
-				operation = null;
+									+ ", your opponent chose " + randItem.getName()
+									+ ". " + result);
+				
+				result = "";
 			}// end of while
 			
 			// print final score
@@ -91,90 +83,88 @@ public class RockPaperScissors {
 	}
 	
 	// random item generate method
-	static String getRandomItem()
+	static Items getRandomItem()
 	{
 		Random r = new Random();
 		int index = r.nextInt(3);
-		if (index == 0)
-			return "rock";
-		else if (index == 1)
-			return "paper";
-		else
-			return "scissor";
+		
+		if (index == 0){
+			Rock rock = new Rock("Rock");
+			return rock;
+		}
+		else if (index == 1){
+			Paper paper = new Paper("Paper");
+			return paper;
+		}
+		else{
+			Scissor scissor = new Scissor("Scissor");
+			return scissor;
+		}
 	}
 }
 
-// super class - not a great class name though :-)
-abstract class ItemOperation{	
-	String randItem;
-	abstract String attack();	
+// super class
+abstract class Items{	
+	String name;
+	abstract String getName();
+	abstract String attack(Scissor s);
+	abstract String attack(Rock r);
+	abstract String attack(Paper p);
 }
 
 // the rock class
-class Rock extends ItemOperation{
-	
-	Rock(String randItem)
-	{
-		this.randItem = randItem;
+class Rock extends Items{
+	Rock(String name){
+		this.name = name;
 	}
-	
-	String attack(){
-		String result;
-		if(randItem == "scissor"){
-			result = "You win!";
-		}
-		else if(randItem == "rock"){
-			result = "Its a tie!"; 
-		}
-		else{
-			result = "Your opponent wins!";
-		}
-		return result;
-	}	
+	String getName(){
+		return name;
+	}
+	String attack(Scissor s){
+		return "Your opponent wins!";
+	}
+	String attack(Rock r){
+		return "Its a tie!";
+	}
+	String attack(Paper p){
+		return "You win!";
+	}
 }
 
 // the paper class
-class Paper extends ItemOperation{
-	
-	Paper(String randItem)
-	{
-		this.randItem = randItem;
+class Paper extends Items{
+	Paper(String name){
+		this.name = name;
 	}
-	
-	String attack(){
-		String result;
-		if(randItem == "rock"){
-			result = "You win!";
-		}
-		else if(randItem == "paper"){
-			result = "Its a tie!"; 
-		}
-		else{
-			result = "Your opponent wins!";
-		}
-		return result;
-	}	
+	String getName(){
+		return name;
+	}
+	String attack(Scissor s){
+		return "You win!";
+	}
+	String attack(Rock r){
+		return "Your opponent wins!";
+	}
+	String attack(Paper p){
+		return "Its a tie!";
+	}
 }
 
 // the scissor class
-class Scissor extends ItemOperation{
-	
-	Scissor(String randItem)
-	{
-		this.randItem = randItem;
+class Scissor extends Items{	
+	Scissor(String name){
+		this.name = name;
 	}
-	
-	String attack(){
-		String result;
-		if(randItem == "paper"){
-			result = "You win!";
-		}
-		else if(randItem == "scissor"){
-			result = "Its a tie!"; 
-		}
-		else{
-			result = "Your opponent wins!";
-		}
-		return result;
+	String getName(){
+		return name;
+	}
+	String attack(Scissor s){
+		return "Its a tie!";
+	}
+	String attack(Rock r){
+		return "You win!";
+	}
+	String attack(Paper p){
+		return "Your opponent wins!";
 	}	
 }
