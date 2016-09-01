@@ -3,9 +3,6 @@ import java.util.Scanner;
 
 public class RockPaperScissors {
 
-	/**
-	 * main
-	 */
 	public static void main(String[] args){
 		
 		// variables
@@ -13,7 +10,6 @@ public class RockPaperScissors {
 		int pcScore = 0;
 		String playerItem;
 		String randItem;
-
 					
 		System.out.println("How many rounds?");
 		Scanner input = new Scanner(System.in);
@@ -22,7 +18,6 @@ public class RockPaperScissors {
 		
 		// dynamic method dispatch
 		ItemOperation operation = null;
-		
 		while(rounds > 0){
 			
 			rounds --;				
